@@ -16,7 +16,7 @@ export function DataTableColumnHeader<TData, TValue>({
   className,
 }: DataTableColumnHeaderProps<TData, TValue>) {
   if (!column.getCanSort()) {
-    return <div className={cn("text-sm font-medium", className)}>{title}</div>
+    return <div className={cn("text-[13px] font-medium", className)}>{title}</div>
   }
 
   // Function to handle direct click on column header for sorting
@@ -33,7 +33,7 @@ export function DataTableColumnHeader<TData, TValue>({
 
   return (
     <div
-      className={cn("flex cursor-pointer items-center space-x-1 text-sm font-medium hover:text-primary", className)}
+      className={cn("flex cursor-pointer items-center space-x-1 text-[13px] font-medium hover:text-primary", className)}
       onClick={handleSortClick}
     >
       <span>{title}</span>

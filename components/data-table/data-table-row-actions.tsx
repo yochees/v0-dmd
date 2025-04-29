@@ -27,16 +27,16 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[140px]">
-        <DropdownMenuItem className="text-sm">
+        <DropdownMenuItem className="text-[13px]">
           <Edit className="mr-2 h-4 w-4 text-muted-foreground/70" />
           Edit
         </DropdownMenuItem>
-        <DropdownMenuItem className="text-sm">
+        <DropdownMenuItem className="text-[13px]">
           <Copy className="mr-2 h-4 w-4 text-muted-foreground/70" />
           Duplicate
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="text-sm text-red-600">
+        <DropdownMenuItem className="text-[13px] text-red-600">
           <Trash className="mr-2 h-4 w-4" />
           Delete
           <span className="sr-only">Delete</span>

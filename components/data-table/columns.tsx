@@ -44,7 +44,7 @@ export const columns: ColumnDef<DataItem>[] = [
   {
     accessorKey: "source",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Source" />,
-    cell: ({ row }) => <div className="truncate text-sm leading-6">{row.getValue("source")}</div>,
+    cell: ({ row }) => <div className="truncate text-[13px] leading-6">{row.getValue("source")}</div>,
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id))
     },
@@ -76,7 +76,7 @@ export const columns: ColumnDef<DataItem>[] = [
             return (
               <Badge
                 className={cn(
-                  "whitespace-nowrap transition-colors text-sm h-6 px-2 font-medium leading-none",
+                  "whitespace-nowrap transition-colors text-[13px] h-6 px-2 font-medium leading-none",
                   option?.className,
                 )}
               >
@@ -113,7 +113,7 @@ export const columns: ColumnDef<DataItem>[] = [
             return (
               <Badge
                 className={cn(
-                  "whitespace-nowrap transition-colors text-sm h-6 px-2 font-medium leading-none",
+                  "whitespace-nowrap transition-colors text-[13px] h-6 px-2 font-medium leading-none",
                   option?.className,
                 )}
               >
@@ -147,27 +147,27 @@ export const columns: ColumnDef<DataItem>[] = [
     accessorKey: "opportunities",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Opportunities" />,
     cell: ({ row }) => {
-      return <div className="truncate text-sm leading-6">{row.getValue("opportunities")}</div>
+      return <div className="truncate text-[13px] leading-6">{row.getValue("opportunities")}</div>
     },
   },
   {
     accessorKey: "dateCreated",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Date Created" />,
     cell: ({ row }) => {
-      return <div className="truncate text-sm leading-6">{format(row.getValue("dateCreated"), "MM/dd/yyyy")}</div>
+      return <div className="truncate text-[13px] leading-6">{format(row.getValue("dateCreated"), "MM/dd/yyyy")}</div>
     },
   },
   {
     accessorKey: "dateUpdated",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Date Updated" />,
     cell: ({ row }) => {
-      return <div className="truncate text-sm leading-6">{format(row.getValue("dateUpdated"), "MM/dd/yyyy")}</div>
+      return <div className="truncate text-[13px] leading-6">{format(row.getValue("dateUpdated"), "MM/dd/yyyy")}</div>
     },
   },
   {
     accessorKey: "journey",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Journey" />,
-    cell: ({ row }) => <div className="truncate text-sm leading-6">{row.getValue("journey")}</div>,
+    cell: ({ row }) => <div className="truncate text-[13px] leading-6">{row.getValue("journey")}</div>,
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id))
     },

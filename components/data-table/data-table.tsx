@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -18,18 +18,49 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 
 import { DataTablePagination } from "./data-table-pagination"
 import { DataTableToolbar } from "./data-table-toolbar"
+import { useTablePersistence } from "@/hooks/use-table-persistence"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
 }
 
+// Default sorting state - sort by title in ascending order
+const defaultSorting: SortingState = [
+  {
+    id: "title",
+    desc: false,
+  },
+]
+
 export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+  // Use our custom hook for persistence
+  const { tableState, persistState, isInitialized } = useTablePersistence({
+    storageKey: "data-management-table-state",
+  })
+
+  // Initialize state from persisted values or defaults
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-  const [sorting, setSorting] = useState<SortingState>([])
+  const [sorting, setSorting] = useState<SortingState>(defaultSorting)
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  })
 
+  // Update state when persisted values are loaded
+  useEffect(() => {
+    if (isInitialized) {
+      setColumnVisibility(tableState.columnVisibility)
+      setColumnFilters(tableState.columnFilters)
+      // Use the persisted sorting state if it exists, otherwise use the default
+      setSorting(tableState.sorting && tableState.sorting.length > 0 ? tableState.sorting : defaultSorting)
+      setPagination(tableState.pagination)
+    }
+  }, [isInitialized, tableState])
+
+  // Create the table instance
   const table = useReactTable({
     data,
     columns,
@@ -38,12 +69,30 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
       columnVisibility,
       rowSelection,
       columnFilters,
+      pagination,
     },
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    onColumnVisibilityChange: setColumnVisibility,
+    onSortingChange: (updater) => {
+      const newSorting = typeof updater === "function" ? updater(sorting) : updater
+      setSorting(newSorting)
+      persistState({ sorting: newSorting })
+    },
+    onColumnFiltersChange: (updater) => {
+      const newFilters = typeof updater === "function" ? updater(columnFilters) : updater
+      setColumnFilters(newFilters)
+      persistState({ columnFilters: newFilters })
+    },
+    onColumnVisibilityChange: (updater) => {
+      const newVisibility = typeof updater === "function" ? updater(columnVisibility) : updater
+      setColumnVisibility(newVisibility)
+      persistState({ columnVisibility: newVisibility })
+    },
+    onPaginationChange: (updater) => {
+      const newPagination = typeof updater === "function" ? updater(pagination) : updater
+      setPagination(newPagination)
+      persistState({ pagination: newPagination })
+    },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -51,7 +100,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
   })
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 text-[13px]">
       <DataTableToolbar table={table} />
       <div className="rounded-md border">
         <Table className="[&_th]:py-2 [&_td]:py-2">

@@ -61,17 +61,17 @@ export function EditablePersonas({ initialValue, row, column }: EditablePersonas
   // Render only the first persona and a count badge if there are more
   const renderPersonas = () => {
     if (selectedPersonas.length === 0) {
-      return <span className="text-sm text-muted-foreground">Select personas</span>
+      return <span className="text-[13px] text-muted-foreground">Select personas</span>
     }
 
     return (
       <div className="flex items-center gap-1">
-        <Badge variant="outline" className="text-sm h-6 px-2">
+        <Badge variant="outline" className="text-[13px] h-6 px-2">
           {selectedPersonas[0]}
         </Badge>
 
         {selectedPersonas.length > 1 && (
-          <Badge variant="secondary" className="text-sm h-6 px-2 ml-1">
+          <Badge variant="secondary" className="text-[13px] h-6 px-2 ml-1">
             +{selectedPersonas.length - 1}
           </Badge>
         )}
@@ -92,15 +92,15 @@ export function EditablePersonas({ initialValue, row, column }: EditablePersonas
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[250px] p-0">
-        <Command>
-          <CommandInput placeholder="Search personas..." className="h-9" />
+        <Command className="text-[13px]">
+          <CommandInput placeholder="Search personas..." className="h-9 text-[13px]" />
           <CommandList>
             {selectedPersonas.length > 0 && (
               <>
-                <CommandGroup heading="Selected">
+                <CommandGroup heading="Selected" className="text-[13px]">
                   <div className="flex flex-wrap gap-1 p-2">
                     {selectedPersonas.map((persona) => (
-                      <Badge key={persona} variant="outline" className="text-sm px-2 py-1 flex items-center gap-1">
+                      <Badge key={persona} variant="outline" className="text-[13px] px-2 py-1 flex items-center gap-1">
                         {persona}
                         <X
                           className="h-3 w-3 cursor-pointer"
@@ -116,14 +116,19 @@ export function EditablePersonas({ initialValue, row, column }: EditablePersonas
                 <CommandSeparator />
               </>
             )}
-            <CommandEmpty>No persona found.</CommandEmpty>
-            <CommandGroup heading="All Personas">
+            <CommandEmpty className="text-[13px]">No persona found.</CommandEmpty>
+            <CommandGroup heading="All Personas" className="text-[13px]">
               {allPersonas.map((persona) => (
-                <CommandItem key={persona} value={persona} onSelect={() => togglePersona(persona)}>
+                <CommandItem
+                  key={persona}
+                  value={persona}
+                  onSelect={() => togglePersona(persona)}
+                  className="text-[13px]"
+                >
                   <Check
                     className={cn("mr-2 h-4 w-4", selectedPersonas.includes(persona) ? "opacity-100" : "opacity-0")}
                   />
-                  <span className="text-sm">{persona}</span>
+                  <span className="text-[13px]">{persona}</span>
                 </CommandItem>
               ))}
             </CommandGroup>

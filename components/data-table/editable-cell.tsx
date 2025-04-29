@@ -53,13 +53,13 @@ export function EditableCell({ initialValue, row, column, type = "text" }: Edita
         onBlur={onBlur}
         onKeyDown={onKeyDown}
         type={type}
-        className="h-8 w-full text-sm"
+        className="h-8 w-full text-[13px]"
       />
     )
   }
 
   return (
-    <div className="w-full cursor-pointer truncate text-sm leading-6" onClick={() => setIsEditing(true)}>
+    <div className="w-full cursor-pointer truncate text-[13px] leading-6" onClick={() => setIsEditing(true)}>
       {value}
     </div>
   )
