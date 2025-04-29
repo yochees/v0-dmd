@@ -40,25 +40,25 @@ export function DataTableFacetedFilter<TData, TValue>({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" size="sm" className="h-8 border-dashed text-[13px]">
+        <Button variant="outline" size="sm" className="h-8 border-dashed text-table">
           <PlusCircledIcon className="mr-2 h-4 w-4" />
           {title}
           {selectedValues?.size > 0 && (
             <>
               <Separator orientation="vertical" className="mx-2 h-4" />
-              <Badge variant="secondary" className="rounded-sm px-1 font-normal lg:hidden text-[13px]">
+              <Badge variant="secondary" className="rounded-sm px-1 font-normal lg:hidden text-table">
                 {selectedValues.size}
               </Badge>
               <div className="hidden space-x-1 lg:flex">
                 {selectedValues.size > 2 ? (
-                  <Badge variant="secondary" className="rounded-sm px-1 font-normal text-[13px]">
+                  <Badge variant="secondary" className="rounded-sm px-1 font-normal text-table">
                     {selectedValues.size} selected
                   </Badge>
                 ) : (
                   options
                     .filter((option) => selectedValues.has(option.value))
                     .map((option) => (
-                      <Badge variant="secondary" key={option.value} className="rounded-sm px-1 font-normal text-[13px]">
+                      <Badge variant="secondary" key={option.value} className="rounded-sm px-1 font-normal text-table">
                         {option.label}
                       </Badge>
                     ))
@@ -69,11 +69,11 @@ export function DataTableFacetedFilter<TData, TValue>({
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0" align="start">
-        <Command className="text-[13px]">
-          <CommandInput placeholder={title} className="text-[13px]" />
+        <Command className="text-table">
+          <CommandInput placeholder={title} className="text-table" />
           <CommandList>
-            <CommandEmpty className="text-[13px]">No results found.</CommandEmpty>
-            <CommandGroup className="text-[13px]">
+            <CommandEmpty className="text-table">No results found.</CommandEmpty>
+            <CommandGroup className="text-table">
               {options.map((option) => {
                 const isSelected = selectedValues.has(option.value)
                 return (
@@ -88,7 +88,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                       const filterValues = Array.from(selectedValues)
                       column?.setFilterValue(filterValues.length ? filterValues : undefined)
                     }}
-                    className="text-[13px]"
+                    className="text-table"
                   >
                     <div
                       className={cn(
@@ -99,9 +99,9 @@ export function DataTableFacetedFilter<TData, TValue>({
                       <CheckIcon className={cn("h-4 w-4")} />
                     </div>
                     {option.icon && <option.icon className="mr-2 h-4 w-4 text-muted-foreground" />}
-                    <span className="text-[13px]">{option.label}</span>
+                    <span className="text-table">{option.label}</span>
                     {facets?.get(option.value) && (
-                      <span className="ml-auto flex h-4 w-4 items-center justify-center font-mono text-[13px]">
+                      <span className="ml-auto flex h-4 w-4 items-center justify-center font-mono text-table">
                         {facets.get(option.value)}
                       </span>
                     )}
@@ -115,7 +115,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                 <CommandGroup>
                   <CommandItem
                     onSelect={() => column?.setFilterValue(undefined)}
-                    className="justify-center text-center text-[13px]"
+                    className="justify-center text-center text-table"
                   >
                     Clear filters
                   </CommandItem>

@@ -57,13 +57,13 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
   }
 
   return (
-    <div className="flex items-center justify-between text-[13px]">
+    <div className="flex items-center justify-between text-table">
       <div className="flex flex-1 items-center space-x-2">
         <Input
           placeholder="Filter by title..."
           value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
           onChange={(event) => table.getColumn("title")?.setFilterValue(event.target.value)}
-          className="h-8 w-[150px] lg:w-[250px] text-[13px]"
+          className="h-8 w-[150px] lg:w-[250px] text-table"
         />
         {table.getColumn("status") && (
           <DataTableFacetedFilter
@@ -104,7 +104,7 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
           />
         )}
         {isFiltered && (
-          <Button variant="ghost" onClick={() => table.resetColumnFilters()} className="h-8 px-2 lg:px-3 text-[13px]">
+          <Button variant="ghost" onClick={() => table.resetColumnFilters()} className="h-8 px-2 lg:px-3 text-table">
             Reset
             <Cross2Icon className="ml-2 h-4 w-4" />
           </Button>
@@ -114,14 +114,14 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
         <Button
           variant="outline"
           size="sm"
-          className="h-8 text-[13px]"
+          className="h-8 text-table"
           onClick={resetTableState}
           title="Reset all table preferences"
         >
           <RotateCcw className="mr-2 h-3.5 w-3.5" />
           Reset All
         </Button>
-        <Button variant="outline" size="sm" className="h-8 text-[13px]" onClick={() => setShowAdvancedFilter(true)}>
+        <Button variant="outline" size="sm" className="h-8 text-table" onClick={() => setShowAdvancedFilter(true)}>
           <SlidersHorizontal className="mr-2 h-3.5 w-3.5" />
           Advanced Filters
         </Button>

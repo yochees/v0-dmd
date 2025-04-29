@@ -100,7 +100,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
   })
 
   return (
-    <div className="space-y-2 text-[13px]">
+    <div className="space-y-2 text-table">
       <DataTableToolbar table={table} />
       <div className="rounded-md border">
         <Table className="[&_th]:py-2 [&_td]:py-2">

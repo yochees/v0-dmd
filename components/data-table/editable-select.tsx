@@ -46,25 +46,25 @@ export function EditableSelect({ options, initialValue, row, column, renderValue
           {renderValue ? (
             renderValue(value)
           ) : (
-            <span className="text-[13px] leading-6">{selectedOption?.label || value}</span>
+            <span className="text-table leading-6">{selectedOption?.label || value}</span>
           )}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
-        <Command className="text-[13px]">
-          <CommandInput placeholder={`Search ${column}...`} className="h-9 text-[13px]" />
+        <Command className="text-table">
+          <CommandInput placeholder={`Search ${column}...`} className="h-9 text-table" />
           <CommandList>
-            <CommandEmpty className="text-[13px]">No option found.</CommandEmpty>
+            <CommandEmpty className="text-table">No option found.</CommandEmpty>
             <CommandGroup>
               {options.map((option) => (
                 <CommandItem
                   key={option.value}
                   value={option.value}
                   onSelect={() => handleSelect(option.value)}
-                  className="text-[13px]"
+                  className="text-table"
                 >
                   <Check className={cn("mr-2 h-4 w-4", value === option.value ? "opacity-100" : "opacity-0")} />
-                  <span className="text-[13px]">{option.label}</span>
+                  <span className="text-table">{option.label}</span>
                 </CommandItem>
               ))}
             </CommandGroup>

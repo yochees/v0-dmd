@@ -113,18 +113,20 @@ export function AdvancedFilter<TData>({ isOpen, onClose, table }: AdvancedFilter
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle>Advanced Filters</DialogTitle>
-          <DialogDescription>Create complex filter rules to find exactly what you're looking for.</DialogDescription>
+          <DialogDescription className="text-table">
+            Create complex filter rules to find exactly what you're looking for.
+          </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           {filters.map((filter, index) => (
             <div key={index} className="flex items-center gap-2">
               <Select value={filter.column} onValueChange={(value) => updateFilter(index, "column", value)}>
-                <SelectTrigger className="w-[180px]">
+                <SelectTrigger className="w-[180px] text-table">
                   <SelectValue placeholder="Select column" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="text-table">
                   {columns.map((column) => (
-                    <SelectItem key={column.id} value={column.id}>
+                    <SelectItem key={column.id} value={column.id} className="text-table">
                       {column.label}
                     </SelectItem>
                   ))}
@@ -134,12 +136,12 @@ export function AdvancedFilter<TData>({ isOpen, onClose, table }: AdvancedFilter
                 value={filter.condition}
                 onValueChange={(value) => updateFilter(index, "condition", value as FilterCondition)}
               >
-                <SelectTrigger className="w-[180px]">
+                <SelectTrigger className="w-[180px] text-table">
                   <SelectValue placeholder="Select condition" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="text-table">
                   {conditions.map((condition) => (
-                    <SelectItem key={condition.value} value={condition.value}>
+                    <SelectItem key={condition.value} value={condition.value} className="text-table">
                       {condition.label}
                     </SelectItem>
                   ))}
@@ -148,7 +150,7 @@ export function AdvancedFilter<TData>({ isOpen, onClose, table }: AdvancedFilter
               <Input
                 value={filter.value}
                 onChange={(e) => updateFilter(index, "value", e.target.value)}
-                className="flex-1"
+                className="flex-1 text-table"
                 placeholder="Value"
               />
               <Button variant="ghost" size="icon" onClick={() => removeFilter(index)} disabled={filters.length === 1}>
@@ -156,15 +158,17 @@ export function AdvancedFilter<TData>({ isOpen, onClose, table }: AdvancedFilter
               </Button>
             </div>
           ))}
-          <Button variant="outline" onClick={addFilter} className="mt-2">
+          <Button variant="outline" onClick={addFilter} className="mt-2 text-table">
             Add Filter
           </Button>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={onClose}>
+          <Button variant="outline" onClick={onClose} className="text-table">
             Cancel
           </Button>
-          <Button onClick={applyFilters}>Apply Filters</Button>
+          <Button onClick={applyFilters} className="text-table">
+            Apply Filters
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
