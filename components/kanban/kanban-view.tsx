@@ -4,10 +4,10 @@ import type React from "react"
 
 import { useState } from "react"
 import type { DataItem } from "@/types/data"
-import { CanvasColumn } from "./canvas-column"
+import { KanbanColumn } from "./kanban-column"
 import { Input } from "@/components/ui/input"
 import { Search } from "lucide-react"
-import { useCanvasState } from "@/hooks/use-canvas-state"
+import { useKanbanState } from "@/hooks/use-kanban-state"
 import {
   DndContext,
   type DragEndEvent,
@@ -18,15 +18,15 @@ import {
   useSensors,
   PointerSensor,
 } from "@dnd-kit/core"
-import { CanvasCard } from "./canvas-card"
+import { KanbanCard } from "./kanban-card"
 import { createPortal } from "react-dom"
 
-interface CanvasViewProps {
+interface KanbanViewProps {
   data: DataItem[]
 }
 
-export function CanvasView({ data }: CanvasViewProps) {
-  const { items, columnSizes, statusOrder, moveItem, resizeColumn, filterItems } = useCanvasState(data)
+export function KanbanView({ data }: KanbanViewProps) {
+  const { items, columnSizes, statusOrder, moveItem, resizeColumn, filterItems } = useKanbanState(data)
   const [searchQuery, setSearchQuery] = useState("")
   const [activeItem, setActiveItem] = useState<DataItem | null>(null)
 
@@ -99,7 +99,7 @@ export function CanvasView({ data }: CanvasViewProps) {
       <DndContext sensors={sensors} onDragStart={handleDragStart} onDragOver={handleDragOver} onDragEnd={handleDragEnd}>
         <div className="grid grid-cols-12 gap-6 mt-6">
           {statusOrder.map((status) => (
-            <CanvasColumn
+            <KanbanColumn
               key={status}
               id={status}
               title={status}
@@ -118,7 +118,7 @@ export function CanvasView({ data }: CanvasViewProps) {
             <DragOverlay>
               {activeItem && (
                 <div className="opacity-80">
-                  <CanvasCard item={activeItem} isDragging />
+                  <KanbanCard item={activeItem} isDragging />
                 </div>
               )}
             </DragOverlay>,

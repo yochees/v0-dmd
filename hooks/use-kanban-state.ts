@@ -5,12 +5,12 @@ import type { DataItem } from "@/types/data"
 
 export type ColumnSizeType = 1 | 2 | 3
 
-interface CanvasState {
+interface KanbanState {
   items: Record<string, DataItem[]>
   columnSizes: Record<string, ColumnSizeType>
 }
 
-export function useCanvasState(initialData: DataItem[]) {
+export function useKanbanState(initialData: DataItem[]) {
   // Group data by status
   const initialGroupedData = initialData.reduce<Record<string, DataItem[]>>((acc, item) => {
     if (!acc[item.status]) {
@@ -29,7 +29,7 @@ export function useCanvasState(initialData: DataItem[]) {
     return acc
   }, {})
 
-  const [state, setState] = useState<CanvasState>({
+  const [state, setState] = useState<KanbanState>({
     items: initialGroupedData,
     columnSizes: initialColumnSizes,
   })

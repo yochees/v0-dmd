@@ -2,13 +2,13 @@
 
 import { useState } from "react"
 import type { DataItem } from "@/types/data"
-import { CanvasCard } from "./canvas-card"
+import { KanbanCard } from "./kanban-card"
 import { cn } from "@/lib/utils"
 import { useDroppable } from "@dnd-kit/core"
 import { ArrowUpWideNarrowIcon as ArrowsHorizontal } from "lucide-react"
-import type { ColumnSizeType } from "@/hooks/use-canvas-state"
+import type { ColumnSizeType } from "@/hooks/use-kanban-state"
 
-interface CanvasColumnProps {
+interface KanbanColumnProps {
   id: string
   title: string
   items: DataItem[]
@@ -17,7 +17,7 @@ interface CanvasColumnProps {
   onResize: (size: ColumnSizeType) => void
 }
 
-export function CanvasColumn({ id, title, items, className, size, onResize }: CanvasColumnProps) {
+export function KanbanColumn({ id, title, items, className, size, onResize }: KanbanColumnProps) {
   const { setNodeRef, isOver } = useDroppable({
     id,
   })
@@ -107,7 +107,7 @@ export function CanvasColumn({ id, title, items, className, size, onResize }: Ca
         {items.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground text-table italic">No items</div>
         ) : (
-          items.map((item) => <CanvasCard key={item.id} item={item} status={id} />)
+          items.map((item) => <KanbanCard key={item.id} item={item} status={id} />)
         )}
       </div>
     </div>

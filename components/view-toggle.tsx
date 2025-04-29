@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
 interface ViewToggleProps {
-  currentView: "table" | "canvas"
+  currentView: "table" | "kanban"
 }
 
 export function ViewToggle({ currentView }: ViewToggleProps) {
@@ -26,11 +26,11 @@ export function ViewToggle({ currentView }: ViewToggleProps) {
       <Button
         variant="ghost"
         size="sm"
-        className={cn("flex items-center gap-2 text-table", currentView === "canvas" && "bg-background shadow-sm")}
-        onClick={() => router.push("/canvas")}
+        className={cn("flex items-center gap-2 text-table", currentView === "kanban" && "bg-background shadow-sm")}
+        onClick={() => router.push("/kanban")}
       >
         <LayoutGrid className="h-4 w-4" />
-        Canvas
+        Kanban
       </Button>
     </div>
   )

@@ -17,13 +17,13 @@ import {
 import { cn } from "@/lib/utils"
 import { useDraggable } from "@dnd-kit/core"
 
-interface CanvasCardProps {
+interface KanbanCardProps {
   item: DataItem
   status?: string
   isDragging?: boolean
 }
 
-export function CanvasCard({ item, status, isDragging = false }: CanvasCardProps) {
+export function KanbanCard({ item, status, isDragging = false }: KanbanCardProps) {
   const [isExpanded, setIsExpanded] = useState(false)
 
   const {
