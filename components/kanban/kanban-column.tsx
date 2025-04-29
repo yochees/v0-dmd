@@ -5,7 +5,7 @@ import type { DataItem } from "@/types/data"
 import { KanbanCard } from "./kanban-card"
 import { cn } from "@/lib/utils"
 import { useDroppable } from "@dnd-kit/core"
-import { ArrowUpWideNarrowIcon as ArrowsHorizontal } from "lucide-react"
+import { Maximize2, Minimize2 } from "lucide-react"
 import type { ColumnSizeType } from "@/hooks/use-kanban-state"
 
 interface KanbanColumnProps {
@@ -28,13 +28,13 @@ export function KanbanColumn({ id, title, items, className, size, onResize }: Ka
   const getColumnWidth = () => {
     switch (size) {
       case 1:
-        return "col-span-3"
+        return "w-[300px]"
       case 2:
-        return "col-span-6"
+        return "w-[450px]"
       case 3:
-        return "col-span-9"
+        return "w-[600px]"
       default:
-        return "col-span-3"
+        return "w-[300px]"
     }
   }
 
@@ -48,7 +48,7 @@ export function KanbanColumn({ id, title, items, className, size, onResize }: Ka
     <div
       ref={setNodeRef}
       className={cn(
-        "rounded-lg border-2 p-4 h-[calc(100vh-220px)] flex flex-col transition-all duration-300",
+        "rounded-lg border-2 p-4 h-[calc(100vh-220px)] flex flex-col transition-all duration-300 shrink-0",
         getColumnWidth(),
         className,
         isOver && "ring-2 ring-primary ring-inset",
@@ -66,7 +66,11 @@ export function KanbanColumn({ id, title, items, className, size, onResize }: Ka
             onClick={() => setIsResizeMenuOpen(!isResizeMenuOpen)}
             title="Resize column"
           >
-            <ArrowsHorizontal className="h-4 w-4 text-muted-foreground" />
+            {size === 3 ? (
+              <Minimize2 className="h-4 w-4 text-muted-foreground" />
+            ) : (
+              <Maximize2 className="h-4 w-4 text-muted-foreground" />
+            )}
           </button>
 
           {isResizeMenuOpen && (

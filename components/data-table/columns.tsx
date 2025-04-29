@@ -11,18 +11,12 @@ import { EditableCell } from "./editable-cell"
 import { EditableSelect } from "./editable-select"
 import { EditablePersonas } from "./editable-personas"
 import { cn } from "@/lib/utils"
+import { SelectAllDropdown } from "./select-all-dropdown"
 
 export const columns: ColumnDef<DataItem>[] = [
   {
     id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-        className="h-4 w-4"
-      />
-    ),
+    header: ({ table }) => <SelectAllDropdown table={table} />,
     cell: ({ row }) => (
       <Checkbox
         checked={row.getIsSelected()}
