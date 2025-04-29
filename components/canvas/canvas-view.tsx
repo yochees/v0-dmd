@@ -1,47 +1,88 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import type React from "react"
+
+import { useState } from "react"
 import type { DataItem } from "@/types/data"
 import { CanvasColumn } from "./canvas-column"
 import { Input } from "@/components/ui/input"
 import { Search } from "lucide-react"
+import { useCanvasState } from "@/hooks/use-canvas-state"
+import {
+  DndContext,
+  type DragEndEvent,
+  type DragOverEvent,
+  DragOverlay,
+  type DragStartEvent,
+  useSensor,
+  useSensors,
+  PointerSensor,
+} from "@dnd-kit/core"
+import { CanvasCard } from "./canvas-card"
+import { createPortal } from "react-dom"
 
 interface CanvasViewProps {
   data: DataItem[]
 }
 
 export function CanvasView({ data }: CanvasViewProps) {
-  const [filteredData, setFilteredData] = useState<DataItem[]>(data)
+  const { items, columnSizes, statusOrder, moveItem, resizeColumn, filterItems } = useCanvasState(data)
   const [searchQuery, setSearchQuery] = useState("")
+  const [activeItem, setActiveItem] = useState<DataItem | null>(null)
 
-  // Group data by status
-  const groupedData = filteredData.reduce<Record<string, DataItem[]>>((acc, item) => {
-    if (!acc[item.status]) {
-      acc[item.status] = []
+  // Configure sensors for drag and drop
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8, // Minimum distance before a drag starts
+      },
+    }),
+  )
+
+  // Handle search input changes
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const query = e.target.value
+    setSearchQuery(query)
+    filterItems(query)
+  }
+
+  // Handle drag start
+  const handleDragStart = (event: DragStartEvent) => {
+    const { active } = event
+    const itemId = active.id as string
+    const status = active.data.current?.status as string
+
+    const item = items[status]?.find((item) => item.id === itemId)
+    if (item) {
+      setActiveItem(item)
     }
-    acc[item.status].push(item)
-    return acc
-  }, {})
+  }
 
-  // Define the order of status columns
-  const statusOrder = ["New", "In Progress", "Completed", "Archived"]
+  // Handle drag over
+  const handleDragOver = (event: DragOverEvent) => {
+    const { active, over } = event
 
-  // Filter data when search query changes
-  useEffect(() => {
-    if (searchQuery.trim() === "") {
-      setFilteredData(data)
-    } else {
-      const query = searchQuery.toLowerCase()
-      setFilteredData(
-        data.filter(
-          (item) =>
-            item.title.toLowerCase().includes(query) ||
-            item.type.toLowerCase().includes(query) ||
-            item.source.toLowerCase().includes(query),
-        ),
-      )
+    if (!over) return
+
+    const activeId = active.id as string
+    const activeStatus = active.data.current?.status as string
+    const overId = over.id as string
+
+    // If over a column
+    if (statusOrder.includes(overId)) {
+      const overStatus = overId
+
+      // Don't do anything if we're already in this column
+      if (activeStatus === overStatus) return
+
+      moveItem(activeId, activeStatus, overStatus)
     }
-  }, [searchQuery, data])
+  }
+
+  // Handle drag end
+  const handleDragEnd = (event: DragEndEvent) => {
+    setActiveItem(null)
+  }
 
   return (
     <div className="space-y-4">
@@ -51,20 +92,39 @@ export function CanvasView({ data }: CanvasViewProps) {
           placeholder="Search items..."
           className="pl-8 text-table"
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          onChange={handleSearchChange}
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
-        {statusOrder.map((status) => (
-          <CanvasColumn
-            key={status}
-            title={status}
-            items={groupedData[status] || []}
-            className={getStatusColor(status)}
-          />
-        ))}
-      </div>
+      <DndContext sensors={sensors} onDragStart={handleDragStart} onDragOver={handleDragOver} onDragEnd={handleDragEnd}>
+        <div className="grid grid-cols-12 gap-6 mt-6">
+          {statusOrder.map((status) => (
+            <CanvasColumn
+              key={status}
+              id={status}
+              title={status}
+              items={items[status] || []}
+              className={getStatusColor(status)}
+              size={columnSizes[status]}
+              onResize={(size) => resizeColumn(status, size)}
+            />
+          ))}
+        </div>
+
+        {/* Drag overlay for visual feedback */}
+        {typeof document !== "undefined" &&
+          activeItem &&
+          createPortal(
+            <DragOverlay>
+              {activeItem && (
+                <div className="opacity-80">
+                  <CanvasCard item={activeItem} isDragging />
+                </div>
+              )}
+            </DragOverlay>,
+            document.body,
+          )}
+      </DndContext>
     </div>
   )
 }

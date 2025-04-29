@@ -5,7 +5,7 @@ import type { DataItem } from "@/types/data"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { format } from "date-fns"
-import { MoreHorizontal, Calendar, Users } from "lucide-react"
+import { MoreHorizontal, Calendar, Users, GripVertical } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -15,13 +15,29 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { cn } from "@/lib/utils"
+import { useDraggable } from "@dnd-kit/core"
 
 interface CanvasCardProps {
   item: DataItem
+  status?: string
+  isDragging?: boolean
 }
 
-export function CanvasCard({ item }: CanvasCardProps) {
+export function CanvasCard({ item, status, isDragging = false }: CanvasCardProps) {
   const [isExpanded, setIsExpanded] = useState(false)
+
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    isDragging: isCurrentlyDragging,
+  } = useDraggable({
+    id: item.id,
+    data: {
+      item,
+      status,
+    },
+  })
 
   // Get type badge color
   const getTypeBadgeClass = (type: string) => {
@@ -42,9 +58,23 @@ export function CanvasCard({ item }: CanvasCardProps) {
   }
 
   return (
-    <Card className="shadow-sm hover:shadow transition-shadow duration-200">
+    <Card
+      ref={setNodeRef}
+      className={cn(
+        "shadow-sm hover:shadow transition-shadow duration-200",
+        (isDragging || isCurrentlyDragging) && "opacity-50 cursor-grabbing",
+        !isDragging && !isCurrentlyDragging && "cursor-grab",
+      )}
+    >
       <CardHeader className="p-3 pb-0 flex flex-row justify-between items-start">
-        <div className="space-y-1.5">
+        <div className="flex items-center gap-2">
+          <div
+            {...attributes}
+            {...listeners}
+            className="cursor-grab p-1 rounded-md hover:bg-muted/50 transition-colors"
+          >
+            <GripVertical className="h-4 w-4 text-muted-foreground" />
+          </div>
           <Badge className={cn("text-table font-medium", getTypeBadgeClass(item.type))}>{item.type}</Badge>
         </div>
         <DropdownMenu>
