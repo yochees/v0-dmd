@@ -15,17 +15,4 @@ export interface DataItem {
   dateCreated: Date
   dateUpdated: Date
   journey: Journey
-  step?: string
-  position?: { x: number; y: number }
-}
-
-export interface CanvasRectangle {
-  id: string
-  x: number
-  y: number
-  width: number
-  height: number
-  type: "step" | "lane"
-  label: string
-  color: string
 }

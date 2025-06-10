@@ -97,18 +97,20 @@ export function KanbanView({ data }: KanbanViewProps) {
       </div>
 
       <DndContext sensors={sensors} onDragStart={handleDragStart} onDragOver={handleDragOver} onDragEnd={handleDragEnd}>
-        <div className="grid grid-cols-12 gap-6 mt-6">
-          {statusOrder.map((status) => (
-            <KanbanColumn
-              key={status}
-              id={status}
-              title={status}
-              items={items[status] || []}
-              className={getStatusColor(status)}
-              size={columnSizes[status]}
-              onResize={(size) => resizeColumn(status, size)}
-            />
-          ))}
+        <div className="flex overflow-x-auto pb-4 -mx-6 px-6">
+          <div className="flex gap-6 min-w-max">
+            {statusOrder.map((status) => (
+              <KanbanColumn
+                key={status}
+                id={status}
+                title={status}
+                items={items[status] || []}
+                className={getStatusColor(status)}
+                size={columnSizes[status]}
+                onResize={(size) => resizeColumn(status, size)}
+              />
+            ))}
+          </div>
         </div>
 
         {/* Drag overlay for visual feedback */}

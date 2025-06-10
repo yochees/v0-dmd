@@ -16,7 +16,6 @@ export async function getData(): Promise<DataItem[]> {
     ["Product Owner"],
   ]
   const journeys = ["Awareness", "Consideration", "Decision", "Retention", "Advocacy"]
-  const steps = ["Discovery", "Analysis", "Design", "Development", "Testing", "Deployment"]
 
   return Array.from({ length: 100 }).map((_, i) => {
     const createdDate = new Date(Date.now() - Math.floor(Math.random() * 90) * 24 * 60 * 60 * 1000)
@@ -34,11 +33,6 @@ export async function getData(): Promise<DataItem[]> {
       dateCreated: createdDate,
       dateUpdated: updatedDate,
       journey: journeys[Math.floor(Math.random() * journeys.length)],
-      step: Math.random() > 0.3 ? steps[Math.floor(Math.random() * steps.length)] : undefined,
-      position: {
-        x: Math.floor(Math.random() * 1200) + 100,
-        y: Math.floor(Math.random() * 800) + 100,
-      },
     }
   })
 }

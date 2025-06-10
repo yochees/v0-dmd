@@ -2,93 +2,105 @@
 
 import type React from "react"
 
-import { useState } from "react"
-import type { CanvasRectangle } from "@/types/data"
-import { X, Edit2 } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { cn } from "@/lib/utils"
+import { useState, useRef, useCallback } from "react"
+import type { CanvasRectangle as Rectangle } from "@/types/data"
 
 interface CanvasRectangleProps {
-  rectangle: CanvasRectangle
-  onUpdate: (id: string, updates: Partial<CanvasRectangle>) => void
-  onDelete: (id: string) => void
-  isSelected: boolean
+  rectangle: Rectangle
+  onUpdate: (id: string, updates: Partial<Rectangle>) => void
 }
 
-export function CanvasRectangleComponent({ rectangle, onUpdate, onDelete, isSelected }: CanvasRectangleProps) {
-  const [isEditing, setIsEditing] = useState(false)
-  const [editLabel, setEditLabel] = useState(rectangle.label)
+export function CanvasRectangle({ rectangle, onUpdate }: CanvasRectangleProps) {
+  const [isResizing, setIsResizing] = useState(false)
+  const [isDragging, setIsDragging] = useState(false)
+  const rectRef = useRef<HTMLDivElement>(null)
 
-  const handleSaveLabel = () => {
-    onUpdate(rectangle.id, { label: editLabel })
-    setIsEditing(false)
-  }
+  const handleMouseDown = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault()
+      setIsDragging(true)
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      handleSaveLabel()
-    } else if (e.key === "Escape") {
-      setEditLabel(rectangle.label)
-      setIsEditing(false)
-    }
-  }
+      const startMouseX = e.clientX
+      const startMouseY = e.clientY
+      const startX = rectangle.x
+      const startY = rectangle.y
+
+      const handleMouseMove = (e: MouseEvent) => {
+        const deltaX = e.clientX - startMouseX
+        const deltaY = e.clientY - startMouseY
+
+        onUpdate(rectangle.id, {
+          x: startX + deltaX,
+          y: startY + deltaY,
+        })
+      }
+
+      const handleMouseUp = () => {
+        setIsDragging(false)
+        document.removeEventListener("mousemove", handleMouseMove)
+        document.removeEventListener("mouseup", handleMouseUp)
+      }
+
+      document.addEventListener("mousemove", handleMouseMove)
+      document.addEventListener("mouseup", handleMouseUp)
+    },
+    [rectangle.id, rectangle.x, rectangle.y, onUpdate],
+  )
+
+  const handleResizeMouseDown = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault()
+      e.stopPropagation()
+      setIsResizing(true)
+
+      const startMouseX = e.clientX
+      const startMouseY = e.clientY
+      const startWidth = rectangle.width
+      const startHeight = rectangle.height
+
+      const handleMouseMove = (e: MouseEvent) => {
+        const deltaX = e.clientX - startMouseX
+        const deltaY = e.clientY - startMouseY
+
+        onUpdate(rectangle.id, {
+          width: Math.max(100, startWidth + deltaX),
+          height: Math.max(60, startHeight + deltaY),
+        })
+      }
+
+      const handleMouseUp = () => {
+        setIsResizing(false)
+        document.removeEventListener("mousemove", handleMouseMove)
+        document.removeEventListener("mouseup", handleMouseUp)
+      }
+
+      document.addEventListener("mousemove", handleMouseMove)
+      document.addEventListener("mouseup", handleMouseUp)
+    },
+    [rectangle.id, rectangle.width, rectangle.height, onUpdate],
+  )
 
   return (
     <div
-      className={cn(
-        "absolute border-2 border-dashed group",
-        rectangle.type === "step" ? "border-blue-500 bg-blue-100/10" : "border-green-500 bg-green-100/10",
-      )}
+      ref={rectRef}
+      className={`absolute border-2 border-dashed border-gray-400 bg-gray-100/50 cursor-move ${
+        isDragging || isResizing ? "border-blue-500 bg-blue-100/50" : ""
+      }`}
       style={{
         left: rectangle.x,
         top: rectangle.y,
         width: rectangle.width,
         height: rectangle.height,
       }}
+      onMouseDown={handleMouseDown}
     >
-      {/* Label */}
+      <div className="absolute top-1 left-2 text-xs font-medium text-gray-600">{rectangle.label}</div>
+
+      {/* Resize handle */}
       <div
-        className={cn(
-          "absolute -top-8 left-0 px-2 py-1 rounded text-white text-sm font-medium flex items-center gap-2",
-          rectangle.type === "step" ? "bg-blue-500" : "bg-green-500",
-        )}
-      >
-        {isEditing ? (
-          <Input
-            value={editLabel}
-            onChange={(e) => setEditLabel(e.target.value)}
-            onBlur={handleSaveLabel}
-            onKeyDown={handleKeyDown}
-            className="h-6 text-xs bg-white text-black border-none p-1 w-24"
-            autoFocus
-          />
-        ) : (
-          <>
-            <span>{rectangle.label}</span>
-            {isSelected && (
-              <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-4 w-4 p-0 text-white hover:bg-white/20"
-                  onClick={() => setIsEditing(true)}
-                >
-                  <Edit2 className="h-3 w-3" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-4 w-4 p-0 text-white hover:bg-white/20"
-                  onClick={() => onDelete(rectangle.id)}
-                >
-                  <X className="h-3 w-3" />
-                </Button>
-              </div>
-            )}
-          </>
-        )}
-      </div>
+        className="absolute bottom-0 right-0 w-3 h-3 bg-blue-500 cursor-se-resize opacity-0 hover:opacity-100"
+        onMouseDown={handleResizeMouseDown}
+      />
     </div>
   )
 }
