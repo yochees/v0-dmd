@@ -19,6 +19,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { DataTablePagination } from "./data-table-pagination"
 import { DataTableToolbar } from "./data-table-toolbar"
 import { useTablePersistence } from "@/hooks/use-table-persistence"
+import { ExternalLink } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Sidepanel } from "@/components/sidepanel"
+import { ItemDetails } from "@/components/kanban/item-details"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -48,6 +52,9 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
     pageIndex: 0,
     pageSize: 10,
   })
+
+  const [selectedItem, setSelectedItem] = useState<TData | null>(null)
+  const [isSidepanelOpen, setIsSidepanelOpen] = useState(false)
 
   // Update state when persisted values are loaded
   useEffect(() => {
@@ -123,11 +130,27 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  className="h-12 hover:bg-muted/30"
+                  className="h-12 hover:bg-muted/30 group"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="py-3">
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      <div className="flex items-center justify-between">
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        {cell.column.id === "title" && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-6 w-6 p-0 ml-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                            onClick={() => {
+                              setSelectedItem(row.original)
+                              setIsSidepanelOpen(true)
+                            }}
+                          >
+                            <ExternalLink className="h-3.5 w-3.5" />
+                            <span className="sr-only">View details</span>
+                          </Button>
+                        )}
+                      </div>
                     </TableCell>
                   ))}
                 </TableRow>
@@ -143,6 +166,12 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
         </Table>
       </div>
       <DataTablePagination table={table} />
+      {/* Sidepanel for item details */}
+      {selectedItem && (
+        <Sidepanel isOpen={isSidepanelOpen} onClose={() => setIsSidepanelOpen(false)} title="Item Details">
+          <ItemDetails item={selectedItem as any} />
+        </Sidepanel>
+      )}
     </div>
   )
 }

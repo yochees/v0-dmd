@@ -11,12 +11,18 @@ import { EditableCell } from "./editable-cell"
 import { EditableSelect } from "./editable-select"
 import { EditablePersonas } from "./editable-personas"
 import { cn } from "@/lib/utils"
-import { SelectAllDropdown } from "./select-all-dropdown"
 
 export const columns: ColumnDef<DataItem>[] = [
   {
     id: "select",
-    header: ({ table }) => <SelectAllDropdown table={table} />,
+    header: ({ table }) => (
+      <Checkbox
+        checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+        className="h-4 w-4"
+      />
+    ),
     cell: ({ row }) => (
       <Checkbox
         checked={row.getIsSelected()}
@@ -33,6 +39,27 @@ export const columns: ColumnDef<DataItem>[] = [
     header: ({ column }) => <DataTableColumnHeader column={column} title="Title" />,
     cell: ({ row }) => {
       return <EditableCell initialValue={row.original.title} row={row} column="title" />
+    },
+  },
+  {
+    accessorKey: "step",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Step" />,
+    cell: ({ row }) => {
+      const step = row.getValue("step") as string | undefined
+      return (
+        <div className="truncate text-table leading-6">
+          {step ? (
+            <Badge variant="outline" className="text-table">
+              {step}
+            </Badge>
+          ) : (
+            <span className="text-muted-foreground italic">No step</span>
+          )}
+        </div>
+      )
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id))
     },
   },
   {
