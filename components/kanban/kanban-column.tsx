@@ -5,7 +5,7 @@ import type { DataItem } from "@/types/data"
 import { KanbanCard } from "./kanban-card"
 import { cn } from "@/lib/utils"
 import { useDroppable } from "@dnd-kit/core"
-import { ArrowUpWideNarrowIcon as ArrowsHorizontal } from "lucide-react"
+import { Maximize2, Minimize2 } from "lucide-react"
 import type { ColumnSizeType } from "@/hooks/use-kanban-state"
 
 interface KanbanColumnProps {
@@ -28,13 +28,13 @@ export function KanbanColumn({ id, title, items, className, size, onResize }: Ka
   const getColumnWidth = () => {
     switch (size) {
       case 1:
-        return "col-span-3"
+        return "w-[300px]"
       case 2:
-        return "col-span-6"
+        return "w-[450px]"
       case 3:
-        return "col-span-9"
+        return "w-[600px]"
       default:
-        return "col-span-3"
+        return "w-[300px]"
     }
   }
 
@@ -48,13 +48,13 @@ export function KanbanColumn({ id, title, items, className, size, onResize }: Ka
     <div
       ref={setNodeRef}
       className={cn(
-        "rounded-lg border-2 p-4 h-[calc(100vh-220px)] flex flex-col transition-all duration-300",
+        "rounded-lg border-2 p-4 h-[calc(100vh-220px)] flex flex-col transition-all duration-300 shrink-0",
         getColumnWidth(),
         className,
         isOver && "ring-2 ring-primary ring-inset",
       )}
     >
-      <div className="flex items-center justify-between mb-4 sticky top-0 bg-inherit z-10 pb-2">
+      <div className="flex items-center justify-between mb-4 sticky top-0">
         <div className="flex items-center gap-2">
           <h3 className="font-semibold text-table">{title}</h3>
           <div className="bg-background text-table px-2 py-1 rounded-full text-xs font-medium">{items.length}</div>
@@ -66,7 +66,11 @@ export function KanbanColumn({ id, title, items, className, size, onResize }: Ka
             onClick={() => setIsResizeMenuOpen(!isResizeMenuOpen)}
             title="Resize column"
           >
-            <ArrowsHorizontal className="h-4 w-4 text-muted-foreground" />
+            {size === 3 ? (
+              <Minimize2 className="h-4 w-4 text-muted-foreground" />
+            ) : (
+              <Maximize2 className="h-4 w-4 text-muted-foreground" />
+            )}
           </button>
 
           {isResizeMenuOpen && (

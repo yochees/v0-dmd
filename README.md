@@ -18,17 +18,17 @@ A modern web application built with Next.js, featuring a Kanban board and other 
 
 1. Clone the repository
 2. Install dependencies:
-   ```bash
+   \`\`\`bash
    npm install
-   ```
+   \`\`\`
 
 ## 🛠️ Development
 
 Run the development server:
 
-```bash
+\`\`\`bash
 npm run dev
-```
+\`\`\`
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
